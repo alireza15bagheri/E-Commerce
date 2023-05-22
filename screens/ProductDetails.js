@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   Button,
 } from "react-native";
 import { getProduct } from "../services/ProductService";
+import { CartContext } from "../CartContext";
 
 export function ProductDetails({ route }) {
   const { productId } = route.params;
@@ -18,6 +19,12 @@ export function ProductDetails({ route }) {
     setProduct(getProduct(productId));
   });
 
+  const {addItemToCart} = useContext(CartContext)
+
+  function onAddToCart() {
+    addItemToCart(product.id)
+  }
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -25,10 +32,10 @@ export function ProductDetails({ route }) {
           <Image style={styles.image} source={product.image} />
         </View>
         <View style={styles.infoContainer}>
-            <Text style={styles.name}>{product.name}</Text>
-            <Text style={styles.price}>{product.price}</Text>
-            <Text style={styles.description}>{product.description}</Text>
-            <Button title="Add To Cart" />
+          <Text style={styles.name}>{product.name}</Text>
+          <Text style={styles.price}>${product.price}</Text>
+          <Text style={styles.description}>{product.description}</Text>
+          <Button onPress={onAddToCart} title="Add To Cart" />
         </View>
       </ScrollView>
     </SafeAreaView>
